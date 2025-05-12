@@ -1,48 +1,68 @@
 import conexao from "../config/database";
 
 class Scheduling {
-  private scheduling_id: number;
+  private scheduling_id?: number; // agora é opcional
   private date_scheduling: string;
   private type: string;
+  private sus: string;
   private latitude: number;
   private longitude: number;
   private users_users_id: number;
 
-  constructor(
-    scheduling_id: number,
-    date_scheduling: string,
-    type: string,
-    latitude: number,
-    longitude: number,
-    users_users_id: number
-  ) {
-    this.scheduling_id = scheduling_id;
+  constructor({
+    date_scheduling,
+    type,
+    sus,
+    latitude,
+    longitude,
+    users_users_id,
+    scheduling_id
+  }: {
+    date_scheduling: string;
+    type: string;
+    sus: string;
+    latitude: number;
+    longitude: number;
+    users_users_id: number;
+    scheduling_id?: number;
+  }) {
     this.date_scheduling = date_scheduling;
     this.type = type;
+    this.sus = sus;
     this.latitude = latitude;
     this.longitude = longitude;
     this.users_users_id = users_users_id;
+    this.scheduling_id = scheduling_id;
   }
 
   // Criar novo agendamento
   public async createScheduling(
     date_scheduling: string,
     type: string,
+    sus: string,
     latitude: number,
     longitude: number,
     users_users_id: number
   ): Promise<Scheduling> {
     try {
       const sql = `
-        INSERT INTO scheduling (date_scheduling, type, latitude, longitude, users_users_id)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO scheduling (date_scheduling, type, sus, latitude, longitude, users_users_id)
+        VALUES (?, ?, ?, ?, ?, ?)
       `;
-      const values = [date_scheduling, type, latitude, longitude, users_users_id];
+      const values = [date_scheduling, type, sus, latitude, longitude, users_users_id];
       const [result]: any = await conexao.execute(sql, values);
       const insertId = result.insertId;
 
       if (insertId) {
-        return new Scheduling(insertId, date_scheduling, type, latitude, longitude, users_users_id);
+        return new Scheduling({
+          date_scheduling,
+          type,
+          sus,
+          latitude,
+          longitude,
+          users_users_id,
+          scheduling_id: insertId
+        });
       } else {
         throw new Error('Erro ao inserir agendamento.');
       }
@@ -69,6 +89,7 @@ class Scheduling {
     id: number,
     date_scheduling?: string,
     type?: string,
+    sus?: string,
     latitude?: number,
     longitude?: number
   ): Promise<any> {
@@ -83,6 +104,10 @@ class Scheduling {
       if (type) {
         fieldsToUpdate.push('type = ?');
         values.push(type);
+      }
+      if (sus) {
+        fieldsToUpdate.push('sus = ?');
+        values.push(sus);
       }
       if (latitude !== undefined) {
         fieldsToUpdate.push('latitude = ?');

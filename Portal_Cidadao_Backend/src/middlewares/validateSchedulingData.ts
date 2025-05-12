@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
 function validarCriarAgendamento(req: Request, res: Response, next: NextFunction): void {
-  const { date_scheduling, type, latitude, longitude, users_users_id } = req.body;
+  const { date_scheduling, type, sus, latitude, longitude, users_users_id } = req.body;
 
-  if (!date_scheduling || !type || latitude === undefined || longitude === undefined || !users_users_id) {
-    res.status(400).json({ error: 'Todos os campos são obrigatórios: date_scheduling, type, latitude, longitude, users_users_id.' });
+  if (!date_scheduling || !type || !sus || latitude === undefined || longitude === undefined || !users_users_id) {
+    res.status(400).json({ error: 'Todos os campos são obrigatórios: date_scheduling, type, sus, latitude, longitude, users_users_id.' });
     return;
   }
 
@@ -14,8 +14,19 @@ function validarCriarAgendamento(req: Request, res: Response, next: NextFunction
     return;
   }
 
-  if (typeof type !== 'string' || typeof latitude !== 'number' || typeof longitude !== 'number' || typeof users_users_id !== 'number') {
+  if (
+    typeof type !== 'string' ||
+    typeof sus !== 'string' ||
+    typeof latitude !== 'number' ||
+    typeof longitude !== 'number' ||
+    typeof users_users_id !== 'number'
+  ) {
     res.status(400).json({ error: 'Campos com tipos inválidos.' });
+    return;
+  }
+
+  if (!/^\d{15}$/.test(sus)) {
+    res.status(400).json({ error: 'O campo "sus" deve conter exatamente 15 dígitos numéricos.' });
     return;
   }
 
@@ -23,10 +34,10 @@ function validarCriarAgendamento(req: Request, res: Response, next: NextFunction
 }
 
 function validarAtualizarAgendamento(req: Request, res: Response, next: NextFunction): void {
-  const { date_scheduling, type, latitude, longitude } = req.body;
+  const { date_scheduling, type, sus, latitude, longitude } = req.body;
 
-  if (!date_scheduling && !type && latitude === undefined && longitude === undefined) {
-    res.status(400).json({ error: 'Forneça pelo menos um campo para atualizar: date_scheduling, type, latitude ou longitude.' });
+  if (!date_scheduling && !type && !sus && latitude === undefined && longitude === undefined) {
+    res.status(400).json({ error: 'Forneça pelo menos um campo para atualizar: date_scheduling, type, sus, latitude ou longitude.' });
     return;
   }
 

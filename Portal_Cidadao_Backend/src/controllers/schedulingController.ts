@@ -1,13 +1,27 @@
 import { Request, Response } from 'express';
 import Scheduling from '../models/Scheduling';
 
-// Criar agendamento
 async function criarAgendamento(req: Request, res: Response): Promise<void> {
   try {
-    const { date_scheduling, type, latitude, longitude, users_users_id } = req.body;
+    const { date_scheduling, type, sus, latitude, longitude, users_users_id } = req.body;
 
-    const agendamento = new Scheduling( date_scheduling, type, '', latitude, longitude, users_users_id);
-    const novoAgendamento = await agendamento.createScheduling(date_scheduling, type, latitude, longitude, users_users_id);
+    const agendamento = new Scheduling({
+      date_scheduling,
+      type,
+      sus,
+      latitude,
+      longitude,
+      users_users_id
+    });
+
+    const novoAgendamento = await agendamento.createScheduling(
+      date_scheduling,
+      type,
+      sus,
+      latitude,
+      longitude,
+      users_users_id
+    );
 
     res.status(201).json({
       message: 'Agendamento criado com sucesso.',
@@ -22,17 +36,20 @@ async function criarAgendamento(req: Request, res: Response): Promise<void> {
   }
 }
 
+
 // Buscar agendamento por ID
 async function buscarAgendamento(req: Request, res: Response): Promise<void> {
   try {
     const id = parseInt(req.params.id);
-
     const resultado = await Scheduling.readScheduling(id);
 
     if (resultado.error) {
       res.status(404).json({ error: resultado.error });
     } else {
-      res.status(200).json({ message: 'Agendamento encontrado com sucesso.', scheduling: resultado });
+      res.status(200).json({
+        message: 'Agendamento encontrado com sucesso.',
+        scheduling: resultado,
+      });
     }
   } catch (error) {
     console.error('Erro ao buscar agendamento:', error);
@@ -44,9 +61,16 @@ async function buscarAgendamento(req: Request, res: Response): Promise<void> {
 async function atualizarAgendamento(req: Request, res: Response): Promise<void> {
   try {
     const id = parseInt(req.params.id);
-    const { date_scheduling, type, latitude, longitude } = req.body;
+    const { date_scheduling, type, latitude, longitude, sus } = req.body;
 
-    const resultado = await Scheduling.updateScheduling(id, date_scheduling, type, latitude, longitude);
+    const resultado = await Scheduling.updateScheduling(
+      id, 
+      date_scheduling, 
+      type, 
+      sus, 
+      latitude, 
+      longitude
+    );
 
     if (resultado.error) {
       res.status(404).json({ error: resultado.error });
@@ -63,7 +87,6 @@ async function atualizarAgendamento(req: Request, res: Response): Promise<void> 
 async function deletarAgendamento(req: Request, res: Response): Promise<void> {
   try {
     const id = parseInt(req.params.id);
-
     const resultado = await Scheduling.deleteScheduling(id);
 
     if (resultado.error) {
@@ -83,3 +106,4 @@ export default {
   atualizarAgendamento,
   deletarAgendamento
 };
+
