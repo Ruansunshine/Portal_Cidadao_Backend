@@ -22,7 +22,7 @@ function  validarCadastroUsuario(req: Request, res: Response, next: NextFunction
   res.status(500).json({ error: 'Erro interno na validação dos dados do usuário.' });
 }
 }
-
+7
 
 function validarLoginUsers(req: Request, res: Response, next: NextFunction): void {
  try {
@@ -43,7 +43,7 @@ function validarLoginUsers(req: Request, res: Response, next: NextFunction): voi
 
 function buscarUsers(req: Request, res: Response, next: NextFunction): void {
   try {
-    const {id} = req.body;
+    const {id} = req.params;
     if(!id){
       res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
       return;
@@ -90,6 +90,8 @@ try {
     }
   }
 
+
+  
 function deleteUsers(req: Request, res: Response, next: NextFunction): void {
     try {
       const { id } = (req as any).user;

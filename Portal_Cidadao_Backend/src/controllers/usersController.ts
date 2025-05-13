@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Users from '../models/users';
+import Users from '../models/Users';
 import jwt from 'jsonwebtoken';
 
  async function cadastrarUsuario(req: Request, res: Response): Promise<void> {
@@ -58,8 +58,9 @@ async function loginUsuario(req: Request, res: Response): Promise<void> {
 
 async function buscarUsuario(req: Request, res: Response): Promise<void> {
   try {
-    const {id} = req.body;
-   const buscar =  await Users.readUser(id);
+    const {id} = req.params;
+    const idInt = parseInt(id);
+   const buscar =  await Users.readUser(idInt);
    if(buscar.error){
     res.status(400).json({
       error:buscar.error,  

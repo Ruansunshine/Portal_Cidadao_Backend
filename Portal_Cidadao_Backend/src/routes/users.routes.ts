@@ -6,7 +6,7 @@ const router = Router();
 // Rota para cadastrar um novo usuário
 router.post('/cadastro', validation.validarCadastroUsuario, controller.cadastrarUsuario);
 router.post('/login', validation.validarLoginUsers, controller.loginUsuario);
-router.get('/buscar', validation.buscarUsers, controller.buscarUsuario);
+router.get('/buscar/:id', validation.buscarUsers, controller.buscarUsuario);
 router.put('/atualizar', validation.validarToken, validation.atualizarUsuario, controller.atualizarUsuario);
 router.delete('/deletar', validation.validarToken, validation.deleteUsers , controller.deletarUsuario);
 
